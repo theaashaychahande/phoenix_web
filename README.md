@@ -1,4 +1,4 @@
-# 🚀 Phoenix Algo
+# 🚀 Phoenix Algo (NOT completed)
 ## check out here "https://phoenixalgo0.netlify.app/"
 **Turning Students into Industry-Ready Tech Professionals**  
 
