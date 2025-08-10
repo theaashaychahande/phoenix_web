@@ -1,4 +1,5 @@
-# 🚀 Phoenix Algo  
+# 🚀 Phoenix Algo
+## check out here "https://phoenixalgo0.netlify.app/"
 **Turning Students into Industry-Ready Tech Professionals**  
 
 Phoenix Algo is a **student-driven technical education initiative** built to **bridge the gap between traditional classroom learning and real-world industry skills**.  
