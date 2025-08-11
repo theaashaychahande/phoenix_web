@@ -1,1 +1,1356 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phoenix Algo | Peer-Powered Coding Education</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* === GLOBAL STYLES === */
+        :root {
+            --primary: #4facfe;
+            --secondary: #00f2fe;
+            --dark: #0a0a2a;
+            --darker: #000033;
+            --light: #a8d8ff;
+            --lighter: #ffffff;
+            --accent: #00f2fe;
+            --card-bg: rgba(0, 15, 60, 0.3);
+            --section-padding: 6rem 1.5rem;
+            --max-width: 1200px;
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+            --gold: #FFD700;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: var(--dark);
+            color: var(--lighter);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4 {
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .container {
+            width: 100%;
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .section {
+            padding: var(--section-padding);
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: var(--dark);
+            padding: 0.8rem 1.8rem;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 242, 254, 0.4);
+        }
+
+        /* === LOADING ANIMATION === */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .loading-logo-container {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .loading-logo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            animation: rotate 1s ease-in-out forwards;
+            position: relative;
+            z-index: 2;
+        }
+
+        .gold-frame {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 5px solid var(--gold);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
+            animation: pulse 2s infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
+            100% { box-shadow: 0 0 30px rgba(255, 215, 0, 0.9); }
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); opacity: 0; }
+            100% { transform: rotate(360deg); opacity: 1; }
+        }
+
+        .welcome-text {
+            font-size: 2.5rem;
+            color: var(--accent);
+            opacity: 0;
+            animation: fadeIn 1s ease-in-out 1s forwards;
+            text-align: center;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(0, 242, 254, 0.5);
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* === BACKGROUND ELEMENTS === */
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            object-fit: cover;
+            opacity: 0.5;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(to bottom, rgba(10,10,42,0.7) 0%, rgba(0,0,51,0.9) 100%);
+        }
+
+        /* === NAVBAR === */
+        nav {
+            position: fixed;
+            width: 100%;
+            padding: 1.2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            background: rgba(10, 10, 42, 0.7);
+            border-bottom: 1px solid rgba(100, 149, 237, 0.2);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .nav-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* === HERO SECTION === */
+        #hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            padding: 0 1.5rem;
+            z-index: 2;
+        }
+
+        .hero-content h1 {
+            font-size: 4.5rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(90deg, var(--lighter), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.1;
+            text-shadow: 0 5px 15px rgba(0, 242, 254, 0.3);
+        }
+
+        .hero-content p {
+            font-size: 1.5rem;
+            margin-bottom: 3rem;
+            color: rgba(168, 216, 255, 0.9);
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* === TECH STACK SECTION === */
+        #tech-stack {
+            background: rgba(0, 10, 40, 0.5);
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .tech-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 149, 237, 0.2);
+            transition: var(--transition);
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .tech-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .tech-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 242, 254, 0.3);
+        }
+
+        .tech-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+
+        .tech-card h3 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        /* === COURSES SECTION === */
+        #new-courses {
+            background: rgba(0, 15, 60, 0.3);
+        }
+
+        .courses-slider {
+            display: flex;
+            overflow-x: auto;
+            gap: 2rem;
+            padding: 1rem 0;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent) transparent;
+        }
+
+        .courses-slider::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .courses-slider::-webkit-scrollbar-thumb {
+            background-color: var(--accent);
+            border-radius: 4px;
+        }
+
+        .course-card {
+            min-width: 300px;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            scroll-snap-align: start;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 149, 237, 0.2);
+            transition: var(--transition);
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .course-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .course-title {
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            color: var(--accent);
+        }
+
+        .course-desc {
+            margin-bottom: 1.5rem;
+            color: var(--light);
+        }
+
+        .course-date {
+            font-size: 0.9rem;
+            color: var(--primary);
+        }
+
+        /* === MISSION SECTION === */
+        #mission {
+            background: rgba(0, 20, 80, 0.3);
+        }
+
+        .mission-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .mission-content p {
+            margin-bottom: 1.5rem;
+        }
+
+        .code-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            z-index: 1;
+            font-family: monospace;
+            font-size: 14px;
+            color: var(--accent);
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .challenge-box {
+            max-width: 600px;
+            margin: 3rem auto 0;
+            text-align: left;
+        }
+
+        .challenge-box h3 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        pre {
+            background: rgba(0, 15, 60, 0.5);
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+
+        code {
+            font-family: monospace;
+            color: var(--primary);
+            display: block;
+        }
+
+        /* FUNNY PROGRAM SECTION */
+        .funny-program {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin: 3rem auto;
+            max-width: 600px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 149, 237, 0.2);
+        }
+
+        .funny-program h3 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .funny-code {
+            background: rgba(0, 15, 60, 0.5);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            text-align: left;
+            position: relative;
+        }
+
+        .run-btn {
+            margin-top: 1rem;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            color: var(--dark);
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: var(--transition);
+        }
+
+        .run-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 242, 254, 0.3);
+        }
+
+        .emoji-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 10rem;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            animation: emojiPop 0.8s ease-out;
+        }
+
+        @keyframes emojiPop {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+        }
+
+        /* === UNIQUE SECTION === */
+        #unique {
+            background: rgba(0, 10, 40, 0.7);
+        }
+
+        .advantage-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .advantage-content p {
+            margin-bottom: 1.5rem;
+        }
+
+        .advantage-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .advantage-card {
+            background: rgba(0, 20, 80, 0.3);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            transition: var(--transition);
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .advantage-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .advantage-card i {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+        }
+
+        .advantage-card h3 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        /* === ABOUT SECTION === */
+        #about {
+            background: rgba(0, 15, 60, 0.5);
+        }
+
+        .about-content {
+            display: flex;
+            gap: 3rem;
+            margin-top: 2.5rem;
+        }
+
+        .about-text {
+            flex: 2;
+        }
+
+        .about-text p {
+            margin-bottom: 1.5rem;
+        }
+
+        .about-stats {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .stat-card {
+            background: rgba(0, 20, 80, 0.3);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            transition: var(--transition);
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .stat-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--light);
+        }
+
+        /* === CONTACT SECTION === */
+        #contact {
+            background: rgba(0, 10, 40, 0.7);
+        }
+
+        .contact-form {
+            max-width: 600px;
+            margin: 2.5rem auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--lighter);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 0 2px var(--accent);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .contact-info {
+            margin-top: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .contact-info p {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: var(--light);
+        }
+
+        .contact-info i {
+            color: var(--accent);
+        }
+
+        /* === FOOTER === */
+        footer {
+            background: rgba(0, 5, 20, 0.9);
+            border-top: 1px solid rgba(100, 149, 237, 0.2);
+        }
+
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+            padding-bottom: 3rem;
+        }
+
+        .footer-column {
+            margin-bottom: 2rem;
+        }
+
+        .footer-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+        }
+
+        .footer-description {
+            margin: 1rem 0;
+            color: var(--light);
+        }
+
+        .footer-column h3 {
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--light);
+            transition: var(--transition);
+            display: inline-block;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+            transform: translateX(5px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-links a {
+            color: var(--light);
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            padding-top: 2rem;
+            border-top: 1px solid rgba(100, 149, 237, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .copyright {
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        .footer-credits {
+            color: var(--light);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .heart {
+            color: #ff4d4d;
+        }
+
+        /* === TEXT CENTERING === */
+        .text-center {
+            text-align: center;
+        }
+
+        /* === RESPONSIVE DESIGN === */
+        @media (max-width: 992px) {
+            .about-content {
+                flex-direction: column;
+            }
+            
+            .about-stats {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .section {
+                padding: 4rem 1.5rem;
+            }
+            
+            .section-title {
+                font-size: 2.2rem;
+                margin-bottom: 2.5rem;
+            }
+
+            .hero-content h1 {
+                font-size: 3.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 80%;
+                height: calc(100vh - 80px);
+                background: rgba(10, 10, 42, 0.95);
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                padding-top: 2rem;
+                gap: 2rem;
+                transition: var(--transition);
+                backdrop-filter: blur(10px);
+            }
+            
+            .nav-links.active {
+                left: 0;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .hero-content h1 {
+                font-size: 3rem;
+            }
+            
+            .footer-container {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .footer-bottom {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .loading-logo-container {
+                width: 150px;
+                height: 150px;
+            }
+
+            .loading-logo {
+                width: 120px;
+                height: 120px;
+            }
+
+            .welcome-text {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-content p {
+                font-size: 1.2rem;
+            }
+            
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .about-stats {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .loading-logo-container {
+                width: 130px;
+                height: 130px;
+            }
+
+            .loading-logo {
+                width: 100px;
+                height: 100px;
+            }
+
+            .welcome-text {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Animation -->
+    <div id="loading-screen">
+        <div class="loading-logo-container">
+            <div class="gold-frame"></div>
+            <img src="phoenix_algo_logo.jpg" alt="Phoenix Algo Logo" class="loading-logo">
+        </div>
+        <div class="welcome-text">Welcome to Phoenix Algo</div>
+    </div>
+    
+    <!-- Video Background -->
+    <video autoplay muted loop class="video-background">
+        <source src="https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-a-futuristic-network-31539-large.mp4" type="video/mp4">
+    </video>
+  
+    <div class="overlay"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo-container">
+            <img src="phoenix_algo_logo.jpg" alt="Phoenix Algo Logo" class="nav-logo">
+            <div class="logo">Phoenix Algo</div>
+        </div>
+        <div class="nav-links">
+            <a href="#hero">Home</a>
+            <a href="#tech-stack">Tech Stack</a>
+            <a href="#new-courses">Courses</a>
+            <a href="#mission">Mission</a>
+            <a href="#unique">Why Us</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+        </div>
+        <button class="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+        </button>
+        <a href="#" class="btn">Join Now</a>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="hero" class="section">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Code Like a Pro.</h1>
+                <p class="text-center">Phoenix Algo bridges the gap between theory and real-world coding. Master DSA, system design, and competitive programming with peer mentors.</p>
+                <div class="text-center">
+                    <a href="#" class="btn">Start Learning</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Stack Section -->
+    <section id="tech-stack" class="section">
+        <div class="container">
+            <h2 class="section-title">Our Tech Stack</h2>
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <div class="tech-icon"><i class="fab fa-python"></i></div>
+                    <h3>Python & Libraries</h3>
+                    <p>NumPy, Pandas, TensorFlow, PyTorch, Django, Flask, OpenCV, and automation scripting</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon"><i class="fas fa-copyright"></i></div>
+                    <h3>C/C++</h3>
+                    <p>System programming, game development, competitive coding, and embedded systems</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon"><i class="fab fa-js"></i></div>
+                    <h3>Web Development</h3>
+                    <p>HTML5, CSS3, JavaScript (ES6+), React, Angular, Vue.js, and Node.js</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon"><i class="fas fa-server"></i></div>
+                    <h3>Backend Tech</h3>
+                    <p>Node.js, Express, Django, Spring Boot, REST APIs, GraphQL, and databases</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon"><i class="fab fa-java"></i></div>
+                    <h3>Java Ecosystem</h3>
+                    <p>Core Java, Spring Framework, Android development, and enterprise applications</p>
+                </div>
+                <div class="tech-card">
+                    <div class="tech-icon"><i class="fas fa-mobile-alt"></i></div>
+                    <h3>Mobile Development</h3>
+                    <p>Kotlin, Flutter, React Native, Android SDK, and iOS development</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Courses Section -->
+    <section id="new-courses" class="section">
+        <div class="container">
+            <h2 class="section-title">Upcoming Courses</h2>
+            <div class="courses-slider">
+                <div class="course-card">
+                    <h3 class="course-title">AI Engineering Bootcamp</h3>
+                    <p class="course-desc">From Python basics to building production-ready ML models with TensorFlow/PyTorch</p>
+                    <p class="course-date">Starts: Soon </p>
+                </div>
+                <div class="course-card">
+                    <h3 class="course-title">Full-Stack Development</h3>
+                    <p class="course-desc">Build complete web apps with React frontend and Node.js/Django backend</p>
+                    <p class="course-date">Starts:Soon </p>
+                </div>
+                <div class="course-card">
+                    <h3 class="course-title">Competitive Programming</h3>
+                    <p class="course-desc">Master DSA and problem-solving techniques for coding interviews</p>
+                    <p class="course-date">Starts: Soon </p>
+                </div>
+                <div class="course-card">
+                    <h3 class="course-title">System Design Masterclass</h3>
+                    <p class="course-desc">Learn to design scalable systems from scratch</p>
+                    <p class="course-date">Starts:Soon </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission Section -->
+    <section id="mission" class="section">
+        <div class="container">
+            <div class="code-animation" id="code-animation"></div>
+            <div class="mission-content">
+                <h2 class="section-title">Our Mission</h2>
+                <p class="text-center">At Phoenix Algo, we're revolutionizing tech education by breaking down the barriers between classroom learning and real-world application. We believe every student deserves access to practical, mentor-driven education that prepares them for the challenges of modern tech careers.</p>
+                
+                <p class="text-center">Our peer-to-peer model creates a supportive environment where students learn from those who've recently walked the same path. Unlike traditional education systems, we focus on building through doing - with every concept immediately applied to real coding challenges and projects.</p>
+                
+                <!-- Funny Program Section -->
+                <div class="funny-program">
+                    <h3>Try Our Funny Program</h3>
+                    <p>Click run to see something fun!</p>
+                    <div class="funny-code">
+                        <code>
+                            # The most important program in computer science<br>
+                            def hello_world():<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;print("Hello World!")<br>
+                            <br>
+                            # But we made it better<br>
+                            def phoenix_algo():<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;print("🚀 Beep boop! Magic happening! 🚀")<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;return "SUCCESS"<br>
+                            <br>
+                            # Run this to see the magic<br>
+                            if _name_ == "_main_":<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;phoenix_algo()<br>
+                        </code>
+                    </div>
+                    <button class="run-btn" id="run-btn">Run Code</button>
+                    <div id="emoji-container"></div>
+                </div>
+                
+                <div class="tech-card challenge-box">
+                    <h3>Try This Challenge Now:</h3>
+                    <pre><code>
+# Reverse a linked list in-place
+def reverse_list(head):
+    prev, curr = None, head
+    while curr:
+        next_node = curr.next
+        curr.next = prev
+        prev = curr
+        curr = next_node
+    return prev
+                    </code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Unique Section -->
+    <section id="unique" class="section">
+        <div class="container">
+            <div class="advantage-content">
+                <h2 class="section-title">Why We're Different</h2>
+                <p class="text-center">While most platforms focus on passive video lectures, Phoenix Algo is built around active learning. Our mentors aren't just teachers - they're battle-tested peers who've recently cracked coding interviews and built real systems. They understand your struggles because they were in your shoes just months ago.</p>
+                
+                <p class="text-center">We combine the rigor of a bootcamp with the accessibility of student mentorship. Every session includes live coding, immediate feedback, and community support. You'll not just learn concepts, but how to think like an engineer - debugging, optimizing, and collaborating like professionals do daily.</p>
+                
+                <div class="advantage-grid">
+                    <div class="advantage-card">
+                        <i class="fas fa-users"></i>
+                        <h3>Peer Mentorship</h3>
+                        <p>Learn from students who remember what it's like to be beginners</p>
+                    </div>
+                    <div class="advantage-card">
+                        <i class="fas fa-laptop-code"></i>
+                        <h3>Live Coding</h3>
+                        <p>All sessions involve hands-on building, not just watching</p>
+                    </div>
+                    <div class="advantage-card">
+                        <i class="fas fa-project-diagram"></i>
+                        <h3>Real Projects</h3>
+                        <p>Build portfolio-worthy applications from day one</p>
+                    </div>
+                    <div class="advantage-card">
+                        <i class="fas fa-graduation-cap"></i>
+                        <h3>Career Support</h3>
+                        <p>Resume reviews, mock interviews, and job placement help</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section">
+        <div class="container">
+            <h2 class="section-title">About Phoenix Algo</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p class="text-center">Founded in 2024 by a group of passionate computer science students, Phoenix Algo was born out of the frustration with traditional coding education. We noticed that most learning platforms didn't prepare students for the realities of technical interviews and real-world development.</p>
+                    <p class="text-center">Our unique peer-mentorship model connects learners with instructors who have recently gone through the same challenges. This creates a more empathetic and effective learning environment where concepts are taught with practical, up-to-date industry relevance.</p>
+                    <p class="text-center">With over 5,000 students trained and a 92% satisfaction rate, we're proud to be changing the way coding is taught. Our alumni now work at top tech companies including Google, Amazon, and Microsoft.</p>
+                </div>
+                <div class="about-stats">
+                    <div class="stat-card">
+                        <div class="stat-number">50+</div>
+                        <div class="stat-label">Students Trained</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">92%</div>
+                        <div class="stat-label">Satisfaction Rate</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">12+</div>
+                        <div class="stat-label">Peer Mentors</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Sucesses rate</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section">
+        <div class="container">
+            <h2 class="section-title">Got Questions?</h2>
+            
+            <form class="contact-form" action="https://api.web3forms.com/submit" method="POST">
+                <input type="hidden" name="access_key" value="dc69ee64-9354-4704-b439-01eeadf9a172">
+                <input type="hidden" name="redirect" value="https://web3forms.com/success">
+                
+                <div class="form-group">
+                    <input type="text" name="name" placeholder="Your Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" name="email" placeholder="Your Email" required>
+                </div>
+                <div class="form-group">
+                    <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn">Send Message</button>
+                </div>
+            </form>
+            
+            <div class="contact-info">
+                <p><i class="fas fa-envelope"></i> <a href="mailto:phoenixalgoo@gmail.com" style="color: var(--light);">phoenixalgoo@gmail.com</a></p>
+                <p><i class="fas fa-phone"></i> <a href="tel:+917507666700" style="color: var(--light);">+91 7507666700</a></p>
+                <p><i class="fas fa-map-marker-alt"></i> Nagpur, Maharastra, India</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="section">
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-column">
+                    <img src="phoenix_algo_logo.jpg" alt="Phoenix Algo Logo" class="footer-logo">
+                    <h3 class="logo">Phoenix Algo</h3>
+                    <p class="footer-description">Empowering students through peer-led technical education since 2024.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Discord"><i class="fab fa-discord"></i></a>
+                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#hero">Home</a></li>
+                        <li><a href="#tech-stack">Tech Stack</a></li>
+                        <li><a href="#new-courses">Courses</a></li>
+                        <li><a href="#mission">Mission</a></li>
+                        <li><a href="#unique">Why Us</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Courses</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">AI Engineering</a></li>
+                        <li><a href="#">Full-Stack Dev</a></li>
+                        <li><a href="#">Competitive Coding</a></li>
+                        <li><a href="#">System Design</a></li>
+                        <li><a href="#">Interview Prep</a></li>
+                        <li><a href="#">Web3 Development</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Legal</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Refund Policy</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p class="copyright">© 2025 Phoenix Algo. All rights reserved.</p>
+                <div class="footer-credits">
+                    <p>Made with students, for students</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Loading animation
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                var loadingScreen = document.getElementById('loading-screen');
+                loadingScreen.style.opacity = '0';
+                setTimeout(function() {
+                    loadingScreen.style.display = 'none';
+                }, 500);
+            }, 2000);
+        });
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+
+        mobileMenuBtn.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+            this.innerHTML = navLinks.classList.contains('active') ? 
+                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+
+        // Smooth scroll for nav links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for scroll animations
+        const animateOnScroll = () => {
+            const elements = document.querySelectorAll('.tech-card, .course-card, .advantage-card, .stat-card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            elements.forEach(element => {
+                observer.observe(element);
+            });
+        };
+
+        // Code animation in mission section
+        const initCodeAnimation = () => {
+            const codeLines = [
+                "def binary_search(arr, target):",
+                "    left, right = 0, len(arr) - 1",
+                "    while left <= right:",
+                "        mid = (left + right) // 2",
+                "        if arr[mid] == target:",
+                "            return mid",
+                "        elif arr[mid] < target:",
+                "            left = mid + 1",
+                "        else:",
+                "            right = mid - 1",
+                "    return -1",
+                "",
+                "# Time Complexity: O(log n)"
+            ];
+
+            const codeElement = document.getElementById('code-animation');
+            let lineIndex = 0;
+
+            function typeCode() {
+                if (lineIndex < codeLines.length) {
+                    codeElement.innerHTML += codeLines[lineIndex] + '<br>';
+                    lineIndex++;
+                    setTimeout(typeCode, 300);
+                } else {
+                    codeElement.innerHTML = '';
+                    lineIndex = 0;
+                    setTimeout(typeCode, 1000);
+                }
+            }
+
+            if (codeElement) {
+                typeCode();
+            }
+        };
+
+        // Funny program emoji popup
+        const initFunnyProgram = () => {
+            const runBtn = document.getElementById('run-btn');
+            const emojiContainer = document.getElementById('emoji-container');
+            
+            const funnyEmojis = ['🤪'];
+            
+            runBtn.addEventListener('click', () => {
+                // Create emoji popup
+                const emojiPopup = document.createElement('div');
+                emojiPopup.className = 'emoji-popup';
+                
+                // Select random emoji
+                const randomEmoji = funnyEmojis[Math.floor(Math.random() * funnyEmojis.length)];
+                emojiPopup.textContent = randomEmoji;
+                
+                // Add to container
+                emojiContainer.appendChild(emojiPopup);
+                
+                // Remove after animation
+                setTimeout(() => {
+                    emojiPopup.remove();
+                }, 800);
+            });
+        };
+
+        // Initialize all functions when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            animateOnScroll();
+            initCodeAnimation();
+            initFunnyProgram();
+        });
+    </script>
+</body>
+</html>
